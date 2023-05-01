@@ -11,10 +11,10 @@ import time
 import numpy as np
 import pandas as pd
 from sklearn.preprocessing import MinMaxScaler
-from CausalFeatureSelection import models_functions as md
-from CausalFeatureSelection import graph_functions as gf
-from CausalFeatureSelection import datasets_functions as df
-from CausalFeatureSelection import save_database as sd
+import models_functions as md
+import graph_functions as gf
+import datasets_functions as df
+import save_database as sd
 from statsmodels.tsa.stattools import adfuller
 import warnings
 warnings.filterwarnings("ignore")
@@ -32,7 +32,6 @@ def experiment(name_dataset, dataset, target, params, flag, database_path, graph
             dataset = dataset.drop(labels=0, axis=0)
     
     data_graph = dataset.loc[:params['size_data_graph']]
-    data_graph.index = range(1,data_graph.shape[0]+1)
     dataset = dataset.loc[params['size_data_graph']:]
     dataset.index = range(1,dataset.shape[0]+1)
     
@@ -95,6 +94,14 @@ def experiment(name_dataset, dataset, target, params, flag, database_path, graph
                 print("Save: ",name_dataset,'_',method_graph,'_',step_ahead)
                 janela = janela +1
     return
+
+
+
+
+
+
+
+
 
 
 
