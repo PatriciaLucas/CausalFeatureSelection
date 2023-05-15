@@ -9,13 +9,12 @@ import math
 import numpy as np
 from sklearn.linear_model import LinearRegression
 import tensorflow as tf
-from keras.layers import Dense, Flatten, SpatialDropout1D, Activation, Add, BatchNormalization, LSTM
-from keras.models import Input, Model
-from keras.engine.topology import Layer
-from keras.constraints import unit_norm
+from tensorflow import keras
+from keras.models import Sequential, Model
+from keras.constraints import max_norm, unit_norm
+from keras.layers import Dense, Flatten, SpatialDropout1D, Activation, Add, BatchNormalization, LSTM, Input
 from keras import regularizers
 from keras.optimizers import Adam, SGD
-from keras.models import Sequential
 from keras.callbacks import EarlyStopping
 
 
