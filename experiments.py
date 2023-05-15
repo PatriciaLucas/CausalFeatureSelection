@@ -38,11 +38,11 @@ def experiment(name_dataset, dataset, target, params, flag, database_path, graph
         if flag:
             print("Criando o grafo..",method_graph)
             start_time = time.time()
-            if method_graph == 'causal':
+            if method_graph == 'PCMCI':
                 graph = gf.create_causal(data_graph, params['alpha_level'], target, params['max_lags'])
-            elif method_graph == 'correlation':
+            elif method_graph == 'Correlational':
                 graph = gf.create_correlation(data_graph, params['conf_level'], target, params['max_lags'])
-            elif method_graph == 'genetic':
+            elif method_graph == 'GA':
                 graph = gf.create_genetic(data_graph, target, params['max_lags'])
             else:
                 graph = gf.create_lasso(data_graph, target, params['max_lags'])
@@ -51,7 +51,6 @@ def experiment(name_dataset, dataset, target, params, flag, database_path, graph
             graph_size = graph.to_numpy().sum()
         else:
             graph = pd.read_csv(graph_path+method_graph+'_'+name_dataset)
-            #graph = graph.drop(columns=['Unnamed: 0'])
             graph.index = range(1,graph.shape[0]+1)
             time_graph = 0
             graph_size = graph.to_numpy().sum()
@@ -76,10 +75,10 @@ def experiment(name_dataset, dataset, target, params, flag, database_path, graph
                 y_test = y.loc[w+params['size_train']:w+params['size_train']+params['size_test']-1]
                 
                 #Treinamento
-                model = md.fit_LR(X_train, y_train)
+                model = md.fit_LSTM(X_train, y_train)
                 
                 #Teste
-                yhat, rmse, nrmse = md.predict_LR(X_test, y_test, model, target)
+                yhat, rmse, nrmse = md.predict_LSTM(X_test, y_test, model, target)
 
                 
                 #Salva no banco de dados
