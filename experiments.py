@@ -21,23 +21,19 @@ warnings.filterwarnings("ignore")
 
             
 
-def experiment(name_dataset, dataset, target, params, flag, database_path, graph_path):
+def experiment(name_dataset, dataset, target, params, flag, database_path, graph_path, methods):
     #Criação da tabela no banco de dados:
     sd.execute("CREATE TABLE IF NOT EXISTS results(name_dataset TEXT, method_graph TEXT, graph_size TEXT, window INT, params BLOB, \
             step_ahead INT, time_graph FLOAT, yhat BLOB, y_test BLOB, rmse FLOAT, nrmse FLOAT)", database_path)
-    for col in dataset.columns.values:
-        p = adfuller(dataset[col].values)[1]
-        if p > 0.05:
-            dataset[col] = dataset[col].values - dataset[col].shift()
-            dataset = dataset.drop(labels=0, axis=0)
+
     
     data_graph = dataset.loc[:params['size_data_graph']]
+    data_graph.index = range(0,data_graph.shape[0])
     dataset = dataset.loc[params['size_data_graph']:]
     dataset.index = range(1,dataset.shape[0]+1)
-    
     params['size_train'] = round((dataset.shape[0] - params['size_test']) / 5) - 1
 
-    for method_graph in ['causal','correlation','genetic','lasso']:
+    for method_graph in methods:
         #Verifica se o grafo já existe:
         if flag:
             print("Criando o grafo..",method_graph)
@@ -54,9 +50,8 @@ def experiment(name_dataset, dataset, target, params, flag, database_path, graph
             graph.to_csv(graph_path+method_graph+'_'+name_dataset, index=False)
             graph_size = graph.to_numpy().sum()
         else:
-            #g = np.load(graph_path+'_'+method_graph+'.npy')
             graph = pd.read_csv(graph_path+method_graph+'_'+name_dataset)
-            graph = graph.drop(columns=['Unnamed: 0'])
+            #graph = graph.drop(columns=['Unnamed: 0'])
             graph.index = range(1,graph.shape[0]+1)
             time_graph = 0
             graph_size = graph.to_numpy().sum()
@@ -94,21 +89,3 @@ def experiment(name_dataset, dataset, target, params, flag, database_path, graph
                 print("Save: ",name_dataset,'_',method_graph,'_',step_ahead)
                 janela = janela +1
     return
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
