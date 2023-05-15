@@ -9,8 +9,6 @@ import numpy as np
 import statsmodels.api as sm
 from sklearn.linear_model import LinearRegression
 from sklearn import linear_model
-from sklearn.svm import LinearSVC
-from sklearn.feature_selection import SelectFromModel
 from genetic_selection import GeneticSelectionCV
 from tigramite.pcmci import PCMCI
 from tigramite import data_processing as pp
@@ -105,7 +103,7 @@ def create_genetic(dataset, target, max_lags):
         cv=5,
         verbose=0,
         scoring="neg_root_mean_squared_error",
-        max_features=max_lags,
+        max_features=max_lags*dataset.shape[1],
         n_population=80,
         crossover_proba=0.5,
         mutation_proba=0.2,
@@ -141,6 +139,18 @@ def create_lasso(dataset, target, max_lags):
     G.index = range(1,G.shape[0]+1)
     return G
     
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
